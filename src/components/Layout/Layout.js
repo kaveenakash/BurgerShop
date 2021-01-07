@@ -1,13 +1,14 @@
 import React from 'react'
+import Auxi from '../../hoc/Auxi'
 
 const layout = props =>{
     return(
-        <div>
+        <Auxi>
             <div>Toolbar,Sidedrawer,Backdrop</div>
             <main>
                 {props.children}
             </main>
-        </div>
+        </Auxi>
     )
 }
 
