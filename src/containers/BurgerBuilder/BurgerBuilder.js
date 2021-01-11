@@ -20,21 +20,42 @@ const BurgerBuilder = (props) => {
   const [totalPrice, setTotalPrice] = useState(4);
 
   const addIngredientHandler = (type) => {
-    const oldCount = ingredients[type];
-    const updatedCount = oldCount + 1;
     const updatedIngredients = { ...ingredients };
-    updatedIngredients[type] = updatedCount;
+    updatedIngredients[type] = ingredients[type] + 1;
     setIngredients(updatedIngredients);
 
     const priceAddition = INGREDIENT_PRICES[type];
-    setTotalPrice((prev) => prev + priceAddition);
+    setTotalPrice((prev) => {
+      return prev + priceAddition;
+    });
   };
-  const removeIngredientHandler = (type) => {};
+  const removeIngredientHandler = (type) => {
+    if (ingredients[type] <= 0) {
+      return;
+    }
+    const updatedIngredients = { ...ingredients };
+    updatedIngredients[type] = ingredients[type] - 1;
+    setIngredients(updatedIngredients);
 
+    const priceSubstraction = INGREDIENT_PRICES[type];
+    setTotalPrice((prev) => {
+      return prev - priceSubstraction;
+    });
+  };
+  const disabledInfo = {
+    ...ingredients,
+  };
+  for (let key in disabledInfo) {
+    disabledInfo[key] = disabledInfo[key] <= 0;
+  }
   return (
     <Auxi>
       <Burger ingredients={ingredients} />
-      <BuildControls ingredientAdded={addIngredientHandler} />
+      <BuildControls
+        ingredientAdded={addIngredientHandler}
+        ingredientSubsract={removeIngredientHandler}
+        disabled={disabledInfo}
+      />
     </Auxi>
   );
 };
