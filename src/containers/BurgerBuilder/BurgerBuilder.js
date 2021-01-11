@@ -55,6 +55,7 @@ const BurgerBuilder = (props) => {
         ingredientAdded={addIngredientHandler}
         ingredientSubsract={removeIngredientHandler}
         disabled={disabledInfo}
+        price={totalPrice}
       />
     </Auxi>
   );
