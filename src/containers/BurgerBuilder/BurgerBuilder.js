@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Auxi from "../../hoc/Auxi";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
@@ -18,6 +18,21 @@ const BurgerBuilder = (props) => {
     meat: 0,
   });
   const [totalPrice, setTotalPrice] = useState(4);
+  const [purchasable, setPurchasable] = useState(false);
+
+  useEffect(() => {
+    const ing = {
+      ...ingredients,
+    };
+    const sum = Object.keys(ing)
+      .map((igKey) => {
+        return ingredients[igKey];
+      })
+      .reduce((sum, el) => {
+        return (sum = sum + el);
+      }, 0);
+    setPurchasable(sum <= 0);
+  }, [ingredients]);
 
   const addIngredientHandler = (type) => {
     const updatedIngredients = { ...ingredients };
@@ -48,6 +63,7 @@ const BurgerBuilder = (props) => {
   for (let key in disabledInfo) {
     disabledInfo[key] = disabledInfo[key] <= 0;
   }
+
   return (
     <Auxi>
       <Burger ingredients={ingredients} />
@@ -56,6 +72,7 @@ const BurgerBuilder = (props) => {
         ingredientSubsract={removeIngredientHandler}
         disabled={disabledInfo}
         price={totalPrice}
+        purchasable={purchasable}
       />
     </Auxi>
   );
