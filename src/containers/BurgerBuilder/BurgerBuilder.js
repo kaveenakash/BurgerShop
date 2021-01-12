@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Auxi from "../../hoc/Auxi";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import Modal from '../../components/UI/Modal/Modal'
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -19,6 +21,7 @@ const BurgerBuilder = (props) => {
   });
   const [totalPrice, setTotalPrice] = useState(4);
   const [purchasable, setPurchasable] = useState(false);
+  const [purchasing,setPurchasing] = useState(false);
 
   useEffect(() => {
     const ing = {
@@ -64,14 +67,23 @@ const BurgerBuilder = (props) => {
     disabledInfo[key] = disabledInfo[key] <= 0;
   }
 
+  const purchaseHandler = () =>{
+    setPurchasing(true);
+  }
+
   return (
     <Auxi>
+      <Modal show={purchasing}>
+        <OrderSummary ingredients={ingredients}/>
+      </Modal>
+
       <Burger ingredients={ingredients} />
       <BuildControls
         ingredientAdded={addIngredientHandler}
         ingredientSubsract={removeIngredientHandler}
         disabled={disabledInfo}
         price={totalPrice}
+        ordered={purchaseHandler}
         purchasable={purchasable}
       />
     </Auxi>
