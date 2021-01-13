@@ -80,7 +80,7 @@ const BurgerBuilder = (props) => {
   return (
     <Auxi>
       <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
-        <OrderSummary ingredients={ingredients} purchaseCancel={purchaseCancelHandler} purchaseContinue={purchaseContinueHandler} />
+        <OrderSummary totalPrice={totalPrice}ingredients={ingredients} purchaseCancel={purchaseCancelHandler} purchaseContinue={purchaseContinueHandler} />
       </Modal>
 
       <Burger ingredients={ingredients} />
