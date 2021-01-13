@@ -70,10 +70,13 @@ const BurgerBuilder = (props) => {
   const purchaseHandler = () =>{
     setPurchasing(true);
   }
+  const purchaseCancelHandler = () =>{
+    setPurchasing(false)
+  }
 
   return (
     <Auxi>
-      <Modal show={purchasing}>
+      <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
         <OrderSummary ingredients={ingredients}/>
       </Modal>
 
