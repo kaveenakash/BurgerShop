@@ -73,11 +73,14 @@ const BurgerBuilder = (props) => {
   const purchaseCancelHandler = () =>{
     setPurchasing(false)
   }
+  const purchaseContinueHandler = () =>{
+    alert('You continue')
+  }
 
   return (
     <Auxi>
       <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
-        <OrderSummary ingredients={ingredients}/>
+        <OrderSummary ingredients={ingredients} purchaseCancel={purchaseCancelHandler} purchaseContinue={purchaseContinueHandler} />
       </Modal>
 
       <Burger ingredients={ingredients} />
