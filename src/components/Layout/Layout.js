@@ -9,10 +9,13 @@ const Layout = props =>{
     const sideDrawerClosedHandler = () =>{
         setShowSideDrawer(false);
     }
+    const sideDrawerToggleHandler = () =>{
+        setShowSideDrawer(prev => !prev);
+    }
 
     return(
         <Auxi>
-            <Toolbar/>  
+            <Toolbar drawerToggleClicked={sideDrawerToggleHandler}/>  
             <SideDrawer open={showSideDrawer}closed={sideDrawerClosedHandler}/>
             <main className={classes.Content}>
                 {props.children}
