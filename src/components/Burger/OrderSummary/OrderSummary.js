@@ -11,7 +11,7 @@ const OrderSummary = (props) => {
       </li>
     );
   });
-  console.log('hello')
+ 
   return (
     <Auxi>
       <h3>Your Order</h3>
