@@ -5,7 +5,7 @@ import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import axios from "../../axios-orders";
-import Spinner from '../../components/UI/Spinner/Spinner'
+import Spinner from "../../components/UI/Spinner/Spinner";
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -25,6 +25,15 @@ const BurgerBuilder = (props) => {
   const [purchasable, setPurchasable] = useState(false);
   const [purchasing, setPurchasing] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error,setError] = useState(false);
+
+  useEffect(() => {
+    axios.get("/ingrdients.json").then((response) => {
+      setIngredients(response.data);
+    }).catch(
+      setError(true)
+    )
+  }, []);
 
   useEffect(() => {
     const ing = {
@@ -78,7 +87,7 @@ const BurgerBuilder = (props) => {
   };
   const purchaseContinueHandler = () => {
     // alert('You continue')
-    setLoading(true)
+    setLoading(true);
     const order = {
       ingredients: ingredients,
       price: totalPrice,
@@ -106,32 +115,41 @@ const BurgerBuilder = (props) => {
       });
   };
 
-  let orderSummary = (
-    <OrderSummary
-      totalPrice={totalPrice}
-      ingredients={ingredients}
-      purchaseCancel={purchaseCancelHandler}
-      purchaseContinue={purchaseContinueHandler}
-    />
-  );
+ let orderSummary = null;
+  
+  let burger = error ?<p>Ingredients Can't be loaded</p> :<Spinner />;
+  if (ingredients) {
+    burger = (
+      <Auxi>
+        <Burger ingredients={ingredients} />
+        <BuildControls
+          ingredientAdded={addIngredientHandler}
+          ingredientSubsract={removeIngredientHandler}
+          disabled={disabledInfo}
+          price={totalPrice}
+          ordered={purchaseHandler}
+          purchasable={purchasable}
+        />
+      </Auxi>
+    );
+    orderSummary = (
+      <OrderSummary
+        totalPrice={totalPrice}
+        ingredients={ingredients}
+        purchaseCancel={purchaseCancelHandler}
+        purchaseContinue={purchaseContinueHandler}
+      />
+    );
+  }
   if (loading) {
-    orderSummary = <Spinner/>
+    orderSummary = <Spinner />;
   }
   return (
     <Auxi>
       <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
         {orderSummary}
       </Modal>
-
-      <Burger ingredients={ingredients} />
-      <BuildControls
-        ingredientAdded={addIngredientHandler}
-        ingredientSubsract={removeIngredientHandler}
-        disabled={disabledInfo}
-        price={totalPrice}
-        ordered={purchaseHandler}
-        purchasable={purchasable}
-      />
+      {burger}
     </Auxi>
   );
 };
