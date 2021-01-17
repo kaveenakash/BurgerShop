@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Auxi from "../../hoc/Auxi";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import Modal from '../../components/UI/Modal/Modal'
-import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary'
+import Modal from "../../components/UI/Modal/Modal";
+import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import axios from "../../axios-orders";
+import Spinner from '../../components/UI/Spinner/Spinner'
 
 const INGREDIENT_PRICES = {
   salad: 0.5,
@@ -21,7 +23,8 @@ const BurgerBuilder = (props) => {
   });
   const [totalPrice, setTotalPrice] = useState(4);
   const [purchasable, setPurchasable] = useState(false);
-  const [purchasing,setPurchasing] = useState(false);
+  const [purchasing, setPurchasing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const ing = {
@@ -67,20 +70,57 @@ const BurgerBuilder = (props) => {
     disabledInfo[key] = disabledInfo[key] <= 0;
   }
 
-  const purchaseHandler = () =>{
+  const purchaseHandler = () => {
     setPurchasing(true);
-  }
-  const purchaseCancelHandler = () =>{
-    setPurchasing(false)
-  }
-  const purchaseContinueHandler = () =>{
-    alert('You continue')
-  }
+  };
+  const purchaseCancelHandler = () => {
+    setPurchasing(false);
+  };
+  const purchaseContinueHandler = () => {
+    // alert('You continue')
+    setLoading(true)
+    const order = {
+      ingredients: ingredients,
+      price: totalPrice,
+      customer: {
+        name: "Kaveen Akash",
+        address: {
+          street: "TestStreet 1",
+          zipcode: "41351",
+          country: "Srilanka",
+        },
+        email: "test@test.com",
+      },
+      deliveryMethod: "fastest",
+    };
 
+    axios
+      .post("/orders.json", order)
+      .then((response) => {
+        setLoading(false);
+        setPurchasing(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setPurchasing(false);
+      });
+  };
+
+  let orderSummary = (
+    <OrderSummary
+      totalPrice={totalPrice}
+      ingredients={ingredients}
+      purchaseCancel={purchaseCancelHandler}
+      purchaseContinue={purchaseContinueHandler}
+    />
+  );
+  if (loading) {
+    orderSummary = <Spinner/>
+  }
   return (
     <Auxi>
       <Modal show={purchasing} modalClosed={purchaseCancelHandler}>
-        <OrderSummary totalPrice={totalPrice}ingredients={ingredients} purchaseCancel={purchaseCancelHandler} purchaseContinue={purchaseContinueHandler} />
+        {orderSummary}
       </Modal>
 
       <Burger ingredients={ingredients} />
