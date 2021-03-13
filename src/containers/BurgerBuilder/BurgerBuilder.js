@@ -28,8 +28,9 @@ const BurgerBuilder = (props) => {
   const [error,setError] = useState(false);
 
   useEffect(() => {
-    axios.get("/ingrdients.json").then((response) => {
-      setIngredients(response.data);
+    axios.get("/getIngredients").then((response) => {
+      setIngredients(response.data[0]);
+      console.log(response)
     }).catch(
       setError(true)
     )
@@ -104,8 +105,9 @@ const BurgerBuilder = (props) => {
     };
 
     axios
-      .post("/orders.json", order)
+      .post("/orders", order)
       .then((response) => {
+        console.log(response)
         setLoading(false);
         setPurchasing(false);
       })
